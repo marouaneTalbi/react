@@ -1,73 +1,126 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
+import { Timeline, TimelineEffect, TimelineRow } from '@xzdarcy/react-timeline-editor';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 import {Card,Button, Container,  } from '@mui/material';
 import ReactPlayer from 'react-player';
 import MultiRangeSlider from "multi-range-slider-react";
 import videojs from 'video.js';
 
-const VideoCutter = (video) => {
-  const playerRef = useRef(null);
 
+const VideoCutter = (currentVideo) => {
+
+  const playerRef = useRef(null);
+  const [start, setStart] = useState();
   const [videoUrl, setVideoUrl] = useState(null);
   const [playing, setPlaying] = useState(false);
-  const [minValue, setMinValue] = useState(25);
-  const [maxValue, setMaxValue] = useState(75);
-  const [duration, setDuration] = useState(0);
+  const [cduration, setDuration] = useState();
+  const videoRef = React.useRef(null);
+  const [video, setVideo] = useState();
+  const [mockData, setMockData] = useState();
+  const [mockEffect, setMockEffect] = useState();
 
-  const handleDuration = (duration) => {
-    setDuration(duration);
-  };
+  const onDuration = (duration) => {
+    setDuration(duration)
+  }
 
-  const handleInput = (e) => {
-    setMinValue(e.minValue);
-    setMaxValue(e.maxValue);
+  useEffect(() => {
+    if (currentVideo.video !== undefined) {
+      setVideoUrl(currentVideo.video.url);
+      setVideo(
+        {
+          src: currentVideo.video.url,
+          start: 0,
+          end: cduration !== undefined ? cduration : 10,
+          currentTime: 0,
+          duration: cduration,
+          type: 'video/mp4'
+        }
+      )
+
+
+  }
+  }, [currentVideo])
+
+
+  useEffect(() => {
+
+    if(video) {
+      setStart(`${video.src}#t=${video.start},${video.end}`);
+      setMockEffect({
+        effect0: {
+          id: 'effect0',
+          name: '00'
+        }
+      })
+      setMockData(
+        [
+          {
+            id: '0',
+            actions: [
+              {
+                id: 'action00',
+                start: video.start,
+                end: video.end,
+                effectId: 'effect0',
+                src: video.src,
+                type: video.type
+              }
+            ]
+          }
+        ]
+      )
+    }
+
+  }, [video])
+
+  const handleEditorDataChange = (editorData) => {
+    const newVideo = { ...video };
+    newVideo.start = editorData[0].actions[0].start;
+    newVideo.end = editorData[0].actions[0].end;
+    newVideo.currentTime = newVideo.start;
+    newVideo.duration = newVideo.end - newVideo.start;
+    setVideo(newVideo);
+    setStart(`${newVideo.src}#t=${newVideo.start},${newVideo.end}`);
   };
 
   useEffect(() => {
-    if (video.video !== undefined) {
-      setVideoUrl(video.video.url);
+    if(cduration) {
+      setVideo(prevVideo => ({ 
+        ...prevVideo, 
+        end: prevVideo.start + cduration,
+        duration: cduration 
+      }))
     }
-  }, [video]);
-
-  const handleTrim = () => {
-
-    const player = videojs(playerRef.current.getInternalPlayer())
-    const start = minValue;
-    const end = maxValue;
-
-    console.log(start, end)
-
-  }
-
+  }, [cduration])
  
 
   return (
     <div style={{flex:1}}>
       {
-        videoUrl &&
+        video &&
           <Card sx={{ position: 'relative', padding:10, width:'100%'}}>
             <ReactPlayer
-              style={{width: '100%'}}
-              ref={playerRef}
-              url={video.video.url} 
-              playing={playing}
+              key={`${video.src}-${video.start}-${video.end}`}
+              url={start}
               controls
-              onDuration={handleDuration}
+              onDuration={onDuration}
+              ref={videoRef}
+              width={1000}  
+
             />
-            <MultiRangeSlider
-              style={{marginTop:20, padding:20}}
-              min={0}
-              max={duration}
-              step={5}
-              label={false}
-              ruler={false}
-              minValue={minValue}
-              maxValue={maxValue}
-              onInput={(e) => {
-                handleInput(e);
-              }}
+
+            <Timeline
+              style={{ height: '100px', width: '100%' }}
+              editorData={mockData}
+              effects={mockEffect}
+              handleEditorDataChange={(e) => console.log(e)}
+              onChange={handleEditorDataChange}
+              rowHeight={40}
+              scaleWidth={49}
+              scale={100}
             />
-            <Button fullWidth size="large" style={{marginTop:40}} onClick={handleTrim} color="secondary" variant="outlined">
+   
+            <Button fullWidth size="large" style={{marginTop:40}} color="secondary" variant="outlined">
                 CUT
             </Button>
          </Card>
