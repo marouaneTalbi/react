@@ -22,15 +22,16 @@ const StyledProductImg = styled('img')({
 
 ShopProductCard.propTypes = {
   product: PropTypes.object,
+  handleClick: PropTypes.func
 };
 
-export default function ShopProductCard({ product }) {
+export default function ShopProductCard({ product, handleClick }) {
   const { name, cover, price, colors, status, priceSale } = product;
 
   return (
-    <Card>
+    <Card onClick={()=>handleClick(product)}>
       <Box sx={{ pt: '100%', position: 'relative' }}>
-        {status && (
+        {/* {status && (
           <Label
             variant="filled"
             color={(status === 'sale' && 'error') || 'info'}
@@ -44,7 +45,7 @@ export default function ShopProductCard({ product }) {
           >
             {status}
           </Label>
-        )}
+        )} */}
         <StyledProductImg alt={name} src={cover} />
       </Box>
 
@@ -56,7 +57,7 @@ export default function ShopProductCard({ product }) {
         </Link>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={colors} />
+          {/* <ColorPreview colors={colors} /> */}
           <Typography variant="subtitle1">
             <Typography
               component="span"

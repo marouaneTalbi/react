@@ -1,14 +1,14 @@
 import PropTypes from 'prop-types';
 // @mui
+
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
+import { Box, Link,Button, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
 // utils
 import { fDate } from '../../../utils/formatTime';
 import { fShortenNumber } from '../../../utils/formatNumber';
 //
 import SvgColor from '../../../components/svg-color';
 import Iconify from '../../../components/iconify';
-
 // ----------------------------------------------------------------------
 
 const StyledCardMedia = styled('div')({
@@ -54,9 +54,11 @@ const StyledCover = styled('img')({
 BlogPostCard.propTypes = {
   post: PropTypes.object.isRequired,
   index: PropTypes.number,
+  handleClick: PropTypes.func
+
 };
 
-export default function BlogPostCard({ post, index }) {
+export default function BlogPostCard({ post, index, handleClick }) {
   const { cover, title, view, comment, share, author, createdAt } = post;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
@@ -167,6 +169,15 @@ export default function BlogPostCard({ post, index }) {
               </Box>
             ))}
           </StyledInfo>
+
+          <Button variant="contained"  onClick={()=>handleClick(post)} startIcon={<Iconify icon="eva:plus-fill" />}>
+          Watch
+          </Button>
+
+          <Button variant="contained"style={{marginLeft:10}}  onClick={()=>handleClick(post)}  startIcon={<Iconify icon="eva:plus-fill" />}>
+          Edit
+          </Button>
+
         </CardContent>
       </Card>
     </Grid>

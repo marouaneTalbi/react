@@ -1,5 +1,5 @@
 import { BrowserRouter } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 // routes
 import Router from './routes';
 // theme
@@ -14,6 +14,9 @@ export default function App() {
   return (
     <HelmetProvider>
       <BrowserRouter>
+        <Helmet>
+          <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none';" />
+        </Helmet>
         <ThemeProvider>
           <ScrollToTop />
           <StyledChart />
