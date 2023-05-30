@@ -1,4 +1,3 @@
-import { Navigate, useRoutes } from 'react-router-dom';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
@@ -9,6 +8,8 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
+import UdatedVideos from './pages/UpdatedVideos';
+import VideoCutter from './components/video-editor/video-cutter';
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +24,10 @@ export default function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
+        { path: 'updated_videos', element: <UdatedVideos /> },
+        { path: 'video-cutter', element: <VideoCutter /> },
+
+
       ],
     },
     {

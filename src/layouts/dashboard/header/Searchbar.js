@@ -1,5 +1,7 @@
 import { useState } from 'react';
 // @mui
+import PropTypes from 'prop-types';
+
 import { styled } from '@mui/material/styles';
 import { Input, Slide, Button, IconButton, InputAdornment, ClickAwayListener } from '@mui/material';
 // utils
@@ -30,9 +32,11 @@ const StyledSearchbar = styled('div')(({ theme }) => ({
   },
 }));
 
-// ----------------------------------------------------------------------
+Searchbar.propTypes = {
+  getValue: PropTypes.func,
+};
 
-export default function Searchbar() {
+export default function Searchbar({getValue}) {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -55,6 +59,7 @@ export default function Searchbar() {
         <Slide direction="down" in={open} mountOnEnter unmountOnExit>
           <StyledSearchbar>
             <Input
+              onChange={(e) => getValue(e)}
               autoFocus
               fullWidth
               disableUnderline
@@ -66,9 +71,9 @@ export default function Searchbar() {
               }
               sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
             />
-            <Button variant="contained" onClick={handleClose}>
+            {/* <Button variant="contained" onClick={handleClose}>
               Search
-            </Button>
+            </Button> */}
           </StyledSearchbar>
         </Slide>
       </div>

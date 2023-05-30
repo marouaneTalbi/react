@@ -40,9 +40,10 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 Header.propTypes = {
   onOpenNav: PropTypes.func,
+  getValue: PropTypes.func,
 };
 
-export default function Header({ onOpenNav }) {
+export default function Header({ onOpenNav, getValue }) {
   return (
     <StyledRoot>
       <StyledToolbar>
@@ -57,7 +58,7 @@ export default function Header({ onOpenNav }) {
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
 
-        <Searchbar />
+        <Searchbar getValue={getValue}  />
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack
@@ -68,9 +69,9 @@ export default function Header({ onOpenNav }) {
             sm: 1,
           }}
         >
-          <LanguagePopover />
+          {/* <LanguagePopover />
           <NotificationsPopover />
-          <AccountPopover />
+          <AccountPopover /> */}
         </Stack>
       </StyledToolbar>
     </StyledRoot>
